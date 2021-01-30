@@ -4,7 +4,7 @@ import tf_slim as slim
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior() 
 import itertools as it
-from dqn.experience_history1 import ExperienceHistory
+from dqn.experience_history2 import ExperienceHistory
 
 class DQN:
     """
@@ -24,7 +24,7 @@ class DQN:
             env,
             batchsize=64,
             pic_size=(96, 96),
-            num_frame_stack=3,
+            num_frame_stack = 3,
             gamma=0.95,
             frame_skip=1,
             train_freq=4,
@@ -33,7 +33,7 @@ class DQN:
             render=True,
             epsilon_decay_steps=int(1e6),
             min_experience_size=int(1e3),
-            experience_capacity=int(1e5),
+            experience_capacity=int(1e4),
             network_update_freq=5000,
             regularization = 1e-6,
             optimizer_params = None,
@@ -268,7 +268,7 @@ class CarRacingDQN(DQN):
             [k for k in it.product([-1, 0, 1], [1, 0], [0.2, 0])]
         )
         # car racing env gives wrong pictures without render
-        kwargs["render"] = True
+        kwargs["render"] = False
         super().__init__(
             action_map=all_actions,
             pic_size=(96, 96),

@@ -26,8 +26,9 @@ import sys
 
 # to start training from scratch:
 load_checkpoint = False
-checkpoint_path = "data/checkpoint02"
+checkpoint_path = "data/checkpoint07"
 train_episodes = float("inf")
+#train_episodes = 20
 save_freq_episodes = 400
 """
 # To play from existing checkpoint without any training:
@@ -35,17 +36,19 @@ load_checkpoint = True
 checkpoint_path = "data/checkpoint01"
 train_episodes = 0 #or just give higher value to train the existing checkpoint more
 """
+
+fl= open('train.txt','w')
 model_config = dict(
     min_epsilon=0.1,
     max_negative_rewards=12,
     min_experience_size=int(1e4),
     num_frame_stack=3,
-    frame_skip=3,
+    frame_skip=2,
     train_freq=4,
     batchsize=64,
     epsilon_decay_steps=int(1e5),
     network_update_freq=int(1e3),
-    experience_capacity=int(4e4),
+    experience_capacity=int(1e4),
     gamma=0.95
 )
 
@@ -90,7 +93,7 @@ def one_episode():
     reward, frames = dqn_agent.play_episode()
     print("episode: %d, reward: %f, length: %d, total steps: %d" %
           (dqn_agent.episode_counter, reward, frames, dqn_agent.global_counter))
-
+    fl.write('{} {}\n'.format(dqn_agent.episode_counter, reward))
     save_cond = (
         dqn_agent.episode_counter % save_freq_episodes == 0
         and checkpoint_path is not None
@@ -138,5 +141,6 @@ dqn_agent.do_training = False
 print("now just playing...")
 print("##########")
 sys.stdout.flush()
-main_loop()
+fl.close()
+#main_loop()
 
